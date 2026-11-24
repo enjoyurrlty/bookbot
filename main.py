@@ -4,7 +4,7 @@ from stats import get_sorted_characters
 import sys
 
 def get_book_text(filepath):
-    with open(filepath) as f:
+    with open(filepath, encoding="utf-8") as f:
         file_contents = f.read()
         return file_contents
 
@@ -17,6 +17,9 @@ def main():
         book_content = get_book_text(book_path)
     except OSError as error:
         print(f"Could not read book '{book_path}': {error.strerror}", file=sys.stderr)
+        sys.exit(1)
+    except UnicodeDecodeError:
+        print(f"Could not read book '{book_path}': file is not valid UTF-8", file=sys.stderr)
         sys.exit(1)
     num_words = get_words_count(book_content)
     characters_count = get_characters_count(book_content)
